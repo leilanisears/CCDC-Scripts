@@ -150,7 +150,6 @@ compile_modsec_nginx(){
 
 }
 
-f_banner
 check_root
 install_nginx
 compile_modsec_nginx
