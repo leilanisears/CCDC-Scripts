@@ -1,1 +1,1 @@
-Edit the actual scripts before running to ensure only the specific components we want are setup depending on the specific environment and what is instaleld and what should be installed.
+Run the scripts with root.
