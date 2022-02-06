@@ -13,23 +13,23 @@ source helpers.sh
 ##############################################################################################################
 
 f_banner(){
-echo
-echo "
+    echo
+    echo "
 
-     ██╗███████╗██╗  ██╗██╗███████╗██╗     ██████╗ ███████╗██████╗
-     ██║██╔════╝██║  ██║██║██╔════╝██║     ██╔══██╗██╔════╝██╔══██╗
-     ██║███████╗███████║██║█████╗  ██║     ██║  ██║█████╗  ██████╔╝
-██   ██║╚════██║██╔══██║██║██╔══╝  ██║     ██║  ██║██╔══╝  ██╔══██╗
-╚█████╔╝███████║██║  ██║██║███████╗███████╗██████╔╝███████╗██║  ██║
-╚════╝ ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚═════╝ ╚══════╝╚═╝  ╚═╝
-                                                              
-CIS Benchmark Hardening
-For Ubuntu Server 16.04 LTS
-By Jason Soto "
-echo
-echo
+    ██╗███████╗██╗  ██╗██╗███████╗██╗     ██████╗ ███████╗██████╗
+    ██║██╔════╝██║  ██║██║██╔════╝██║     ██╔══██╗██╔════╝██╔══██╗
+    ██║███████╗███████║██║█████╗  ██║     ██║  ██║█████╗  ██████╔╝
+    ██   ██║╚════██║██╔══██║██║██╔══╝  ██║     ██║  ██║██╔══╝  ██╔══██╗
+    ╚█████╔╝███████║██║  ██║██║███████╗███████╗██████╔╝███████╗██║  ██║
+    ╚════╝ ╚══════╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚═════╝ ╚══════╝╚═╝  ╚═╝
 
-}
+    CIS Benchmark Hardening
+    For Ubuntu Server 16.04 LTS
+        By Jason Soto "
+        echo
+        echo
+
+    }
 
 
 ##############################################################################################################
@@ -41,15 +41,15 @@ f_banner
 
 
 check_root() {
-if [ $EUID -ne 0 ]; then
-      echo "Permission Denied"
-      echo "Can only be run by root"
-      exit
-else
-      clear
-      f_banner
-      cat templates/texts/welcome-CIS
-fi
+    if [ $EUID -ne 0 ]; then
+        echo "Permission Denied"
+        echo "Can only be run by root"
+        exit
+    else
+        clear
+        f_banner
+        cat templates/texts/welcome-CIS
+    fi
 }
 
 ##############################################################################################################
@@ -152,19 +152,6 @@ chown root:root /boot/grub/grub.cfg
 chmod og-rwx /boot/grub/grub.cfg
 
 #1.4.2 Ensure bootloader password is set (Scored)
-
-echo -e "\e[34m---------------------------------------------------------------------------------------------------------\e[00m"
-echo -e "\e[93m[+]\e[00m We will now Set a Bootloader Password"
-echo -e "\e[34m---------------------------------------------------------------------------------------------------------\e[00m"
-echo ""
-
-grub-mkpasswd-pbkdf2 | tee grubpassword.tmp
-grubpassword=$(cat grubpassword.tmp | sed -e '1,2d' | cut -d ' ' -f7)
-echo " set superusers="root" " >> /etc/grub.d/40_custom
-echo " password_pbkdf2 root $grubpassword " >> /etc/grub.d/40_custom
-rm grubpassword.tmp
-update-grub
-
 #1.4.3 Ensure authentication required for single user mode (Scored)
 
 
@@ -177,11 +164,11 @@ sysctl -e -p
 
 #1.5.2 Ensure XD/NX support is enabled (Not Scored)
 #1.5.3 Ensure address space layout randomization (ASLR) is enabled (Scored)
-    #already set on sysctl.conf template file
+#already set on sysctl.conf template file
 
 
 #1.5.4 Ensure prelink is disabled (Scored)
-    # not installed by default on Clean Ubuntu install, will add condition later on
+# not installed by default on Clean Ubuntu install, will add condition later on
 
 #1.6 Mandatory Access Control
 #1.6.1.1 Ensure SELinux is not disabled in bootloader configuration (Scored) N/A
@@ -296,7 +283,7 @@ update-grub
 
 #3.4 TCP Wrappers
 #.4.1 Ensure TCP Wrappers is installed (Scored)
-   # Installed by default
+# Installed by default
 
 
 #.4.2 Ensure /etc/hosts.allow is configured (Scored)
@@ -420,8 +407,8 @@ sed -i 's/GRUB_CMDLINE_LINUX="ipv6.disable=1"/GRUB_CMDLINE_LINUX="ipv6.disable=1
 cp templates/audit-CIS.rules /etc/audit/audit.rules
 
 find / -xdev \( -perm -4000 -o -perm -2000 \) -type f | awk '{print \
-"-a always,exit -F path=" $1 " -F perm=x -F auid>=1000 -F auid!=4294967295 \
--k privileged" } ' >> /etc/audit/audit.rules
+    "-a always,exit -F path=" $1 " -F perm=x -F auid>=1000 -F auid!=4294967295 \
+    -k privileged" } ' >> /etc/audit/audit.rules
 
 echo " " >> /etc/audit/audit.rules
 echo "#End of Audit Rules" >> /etc/audit/audit.rules
@@ -492,13 +479,6 @@ chown root:root /etc/cron.allow /etc/at.allow
 
 ##Create user for SSH Access
 
-echo -e "\e[34m---------------------------------------------------------------------------------------------------------\e[00m"
-echo -e "\e[93m[+]\e[00m We will now Create a New User for SSH Access"
-echo -e "\e[34m---------------------------------------------------------------------------------------------------------\e[00m"
-echo ""
-echo -n " Type the new username: "; read username
-adduser $username
-
 echo -n " Securing SSH..."
 sed s/USERNAME/$username/g templates/sshd_config-CIS > /etc/ssh/sshd_config; echo "OK"
 service ssh restart
@@ -538,12 +518,12 @@ useradd -D -f 30
 #5.4.2 Ensure system accounts are non-login (Scored)
 
 for user in `awk -F: '($3 < 1000) {print $1 }' /etc/passwd`; do
-  if [ $user != "root" ]; then
-    usermod -L $user
-  if [ $user != "sync" ] && [ $user != "shutdown" ] && [ $user != "halt" ]; then
-    usermod -s /usr/sbin/nologin $user
-  fi
-  fi
+    if [ $user != "root" ]; then
+        usermod -L $user
+        if [ $user != "sync" ] && [ $user != "shutdown" ] && [ $user != "halt" ]; then
+            usermod -s /usr/sbin/nologin $user
+        fi
+    fi
 done
 
 #5.4.3 Ensure default group for the root account is GID 0 (Scored)
@@ -640,4 +620,3 @@ f_banner
 cat templates/texts/bye-CIS
 say_continue
 
-reboot
